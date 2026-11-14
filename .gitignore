@@ -17,7 +17,13 @@
 
 # Unreal generated files
 /SimCopterRemake/Binaries
-/SimCopterRemake/Build
+/SimCopterRemake/Build/*
+!/SimCopterRemake/Build/Mac/
+/SimCopterRemake/Build/Mac/*
+!/SimCopterRemake/Build/Mac/Resources/
+/SimCopterRemake/Build/Mac/Resources/*
+# The Mac app icon (drawn by Tools/MacRelease/icon/DrawIcon.swift).
+!/SimCopterRemake/Build/Mac/Resources/Assets.xcassets/
 /SimCopterRemake/DerivedDataCache
 /SimCopterRemake/Intermediate
 /SimCopterRemake/Saved

@@ -8,5 +8,9 @@ rm -rf "$OUT"
 osacompile -o "$OUT" "$HERE/installer/Installer.applescript"
 cp "$HERE/installer/install.sh" "$OUT/Contents/Resources/install.sh"
 chmod +x "$OUT/Contents/Resources/install.sh"
+# Same icon as the game (Tools/MacRelease/icon, drawn by DrawIcon.swift).
+cp "$HERE/icon/AppIcon.icns" "$OUT/Contents/Resources/applet.icns"
+rm -f "$OUT/Contents/Resources/Assets.car"
+/usr/libexec/PlistBuddy -c "Delete :CFBundleIconName" "$OUT/Contents/Info.plist" 2>/dev/null || true
 codesign --force --deep --sign - "$OUT"
 echo "Built $OUT"
