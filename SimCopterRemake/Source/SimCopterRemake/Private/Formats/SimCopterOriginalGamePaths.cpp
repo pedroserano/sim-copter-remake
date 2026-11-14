@@ -3,6 +3,7 @@
 #include "Formats/SimCopterOriginalGamePaths.h"
 
 #include "HAL/FileManager.h"
+#include "HAL/PlatformMisc.h"
 #include "HAL/PlatformProcess.h"
 #include "Internationalization/Internationalization.h"
 #include "Misc/FileHelper.h"
@@ -29,8 +30,15 @@ FString MakeAbsolute(const FString& Relative)
 FString UserDataRootDirImpl()
 {
 #if PLATFORM_MAC
-	FString Dir = FPaths::ConvertRelativePathToFull(
-		FPaths::Combine(FPlatformProcess::UserSettingsDir(), TEXT("SimCopterRemake"), TEXT("SimCopter")));
+	// Not FPlatformProcess::UserSettingsDir(): on Mac that is Application Support/Epic/, which is
+	// not where the installer (or a player following the README) puts the files.
+	FString Home = FPlatformMisc::GetEnvironmentVariable(TEXT("HOME"));
+	if (Home.IsEmpty())
+	{
+		Home = FPlatformProcess::UserHomeDir();
+	}
+	FString Dir = FPaths::ConvertRelativePathToFull(FPaths::Combine(
+		Home, TEXT("Library"), TEXT("Application Support"), TEXT("SimCopterRemake"), TEXT("SimCopter")));
 	FPaths::NormalizeDirectoryName(Dir);
 	return Dir;
 #else
