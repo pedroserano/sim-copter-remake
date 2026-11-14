@@ -540,8 +540,8 @@ void ASimCopterMainMenuGameMode::PlayNextIntro()
 		return;
 	}
 	IntroOpenedAt = FPlatformTime::Seconds();
-	const FString Path = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir() /
-		FString::Printf(TEXT("Generated/Movies/Intro/INTRO%d.mp4"), IntroIndex));
+	const FString Path = SimCopterOriginalGame::ResolveGeneratedMedia(
+		FString::Printf(TEXT("Movies/Intro/INTRO%d.mp4"), IntroIndex));
 	if (!IntroPlayer->OpenFile(Path)) IntroOpenFailed(Path);
 }
 

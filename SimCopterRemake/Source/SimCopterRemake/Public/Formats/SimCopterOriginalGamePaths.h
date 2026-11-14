@@ -30,6 +30,16 @@ namespace SimCopterOriginalGame
 	// a custom/incomplete build may not have it.
 	SIMCOPTERREMAKE_API FString GetPlayerRootDir();
 
+	// Where players put their own copy of the data. On Mac this is
+	// ~/Library/Application Support/SimCopterRemake/SimCopter, outside the signed .app bundle, so a
+	// data-free release can be filled in without modifying the app. Elsewhere it is GetPlayerRootDir().
+	SIMCOPTERREMAKE_API FString GetUserDataRootDir();
+
+	// A baked media file (movie, loading atlas) by its path under Content/Generated. Returns the
+	// packaged copy when present, else the copy a data-free release's setup baked into
+	// <GetUserDataRootDir()>/Generated, else the packaged path so callers can still report it.
+	SIMCOPTERREMAKE_API FString ResolveGeneratedMedia(const FString& RelativePath);
+
 	// Every candidate root, in priority order, absolute and normalized.
 	SIMCOPTERREMAKE_API void GetSearchRoots(TArray<FString>& OutRoots);
 

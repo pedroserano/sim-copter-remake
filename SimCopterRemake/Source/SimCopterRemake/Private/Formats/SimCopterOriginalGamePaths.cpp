@@ -3,6 +3,7 @@
 #include "Formats/SimCopterOriginalGamePaths.h"
 
 #include "HAL/FileManager.h"
+#include "HAL/PlatformProcess.h"
 #include "Internationalization/Internationalization.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
@@ -18,6 +19,23 @@ FString MakeAbsolute(const FString& Relative)
 	FString Absolute = FPaths::ConvertRelativePathToFull(FPaths::Combine(FPaths::ProjectDir(), Relative));
 	FPaths::NormalizeDirectoryName(Absolute);
 	return Absolute;
+}
+
+// Where the player is told to put their own data. On Mac, ProjectDir is inside the signed .app
+// bundle, so a data-free release cannot ask players to copy files in there: doing so breaks the
+// bundle's seal and is lost on every update. ~/Library/Application Support/SimCopterRemake/SimCopter
+// is writable, survives reinstalls and leaves the app untouched. Elsewhere it stays the folder
+// beside the executable.
+FString UserDataRootDirImpl()
+{
+#if PLATFORM_MAC
+	FString Dir = FPaths::ConvertRelativePathToFull(
+		FPaths::Combine(FPlatformProcess::UserSettingsDir(), TEXT("SimCopterRemake"), TEXT("SimCopter")));
+	FPaths::NormalizeDirectoryName(Dir);
+	return Dir;
+#else
+	return MakeAbsolute(TEXT("../SimCopter"));
+#endif
 }
 
 // A shipped install always has these; an empty folder the player just made has none of them. The
@@ -52,6 +70,30 @@ FString GetPlayerRootDir()
 	return MakeAbsolute(PlayerRootRelativePath);
 }
 
+FString GetUserDataRootDir()
+{
+	return UserDataRootDirImpl();
+}
+
+FString ResolveGeneratedMedia(const FString& RelativePath)
+{
+	FString Packaged = FPaths::ConvertRelativePathToFull(FPaths::Combine(FPaths::ProjectContentDir(), TEXT("Generated"), RelativePath));
+	FPaths::NormalizeFilename(Packaged);
+	if (IFileManager::Get().FileExists(*Packaged))
+	{
+		return Packaged;
+	}
+
+	FString UserBaked = FPaths::Combine(GetUserDataRootDir(), TEXT("Generated"), RelativePath);
+	FPaths::NormalizeFilename(UserBaked);
+	if (IFileManager::Get().FileExists(*UserBaked))
+	{
+		return UserBaked;
+	}
+
+	return Packaged;
+}
+
 void GetSearchRoots(TArray<FString>& OutRoots)
 {
 	OutRoots.Reset();
@@ -59,6 +101,10 @@ void GetSearchRoots(TArray<FString>& OutRoots)
 	// Bundled packages put their data here. It also remains the explicit developer override, so it
 	// wins over whatever a checkout happens to have under Reference.
 	OutRoots.Add(GetPlayerRootDir());
+#if PLATFORM_MAC
+	// A data-free Mac release keeps the player's own copy outside the app bundle.
+	OutRoots.Add(GetUserDataRootDir());
+#endif
 	OutRoots.Add(MakeAbsolute(TEXT("SimCopter")));
 
 	// Bundled beside the cooked content, for a build that is allowed to ship the data.
@@ -153,7 +199,7 @@ void EnsurePlayerRootFolder()
 		return;
 	}
 
-	const FString RootDir = GetPlayerRootDir();
+	const FString RootDir = GetUserDataRootDir();
 	if (!IFileManager::Get().DirectoryExists(*RootDir) &&
 		!IFileManager::Get().MakeDirectory(*RootDir, /*Tree=*/true))
 	{
@@ -186,7 +232,7 @@ FText GetMissingDataHint()
 		LOCTEXT(
 			"MissingOriginalGameData",
 			"The original SimCopter game files have to be in place.\nPut them in:\n{0}"),
-		FText::FromString(FPaths::ConvertRelativePathToFull(GetPlayerRootDir())));
+		FText::FromString(GetUserDataRootDir()));
 }
 }
 

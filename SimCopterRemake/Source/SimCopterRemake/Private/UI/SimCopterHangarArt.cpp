@@ -5,6 +5,7 @@
 #include "Engine/Texture2D.h"
 #include "Flight/SimCopterHelicopterRegistry.h"
 #include "Formats/MaxisWindowsBitmapReader.h"
+#include "Formats/SimCopterOriginalGamePaths.h"
 #include "Ground/SimCopterPopulationSprite.h"
 #include "HAL/FileManager.h"
 #include "HAL/PlatformFileManager.h"
@@ -226,8 +227,8 @@ FString USimCopterHangarArt::ResolveMenuSkyMoviePath() const
 	// Generated is intentionally gitignored alongside the user's original art. The bake tool
 	// preserves the original frame count and timing while changing only the unsupported Smacker
 	// container/codec into a Media Foundation-readable MP4.
-	TArray<FString, TInlineAllocator<3>> Candidates;
-	Candidates.Add(FPaths::Combine(FPaths::ProjectContentDir(), TEXT("Generated/Movies/MENUSKY.mp4")));
+	TArray<FString, TInlineAllocator<4>> Candidates;
+	Candidates.Add(SimCopterOriginalGame::ResolveGeneratedMedia(TEXT("Movies/MENUSKY.mp4")));
 	Candidates.Add(FPaths::Combine(FPaths::ProjectContentDir(), TEXT("Movies/MENUSKY.mp4")));
 	if (!OriginalGameRoot.IsEmpty())
 	{
@@ -313,8 +314,8 @@ FString USimCopterHangarArt::ResolveCareerCityMoviePath(const int32 CityIndex) c
 	}
 
 	const FString FileName = FString::Printf(TEXT("CITY%d_S.mp4"), CityIndex);
-	TArray<FString, TInlineAllocator<3>> Candidates;
-	Candidates.Add(FPaths::Combine(FPaths::ProjectContentDir(), TEXT("Generated/Movies/Career"), FileName));
+	TArray<FString, TInlineAllocator<4>> Candidates;
+	Candidates.Add(SimCopterOriginalGame::ResolveGeneratedMedia(FString(TEXT("Movies/Career/")) + FileName));
 	Candidates.Add(FPaths::Combine(FPaths::ProjectContentDir(), TEXT("Movies/Career"), FileName));
 	if (!OriginalGameRoot.IsEmpty())
 	{

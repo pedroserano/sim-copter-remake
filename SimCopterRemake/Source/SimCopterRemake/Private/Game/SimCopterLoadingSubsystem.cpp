@@ -5,6 +5,7 @@
 #include "Engine/GameViewportClient.h"
 #include "Framework/Application/SlateApplication.h"
 #include "Fonts/FontMeasure.h"
+#include "Formats/SimCopterOriginalGamePaths.h"
 #include "Misc/Paths.h"
 #include "MoviePlayer.h"
 #include "Kismet/GameplayStatics.h"
@@ -30,7 +31,7 @@ public:
 	void Construct(const FArguments& Args)
 	{
 		ForceVolatile(true); // frame UVs advance even while the game thread is blocked
-		const FString Path = FPaths::Combine(FPaths::ProjectContentDir(), TEXT("Generated/Loading/HRGLASS.png"));
+		const FString Path = SimCopterOriginalGame::ResolveGeneratedMedia(TEXT("Loading/HRGLASS.png"));
 		if (FPaths::FileExists(Path))
 		{
 			Atlas = MakeShared<FSlateDynamicImageBrush>(FName(*Path), FVector2D(3000, 1600));
