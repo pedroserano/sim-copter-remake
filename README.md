@@ -1,6 +1,44 @@
-# SimCopter Remake
+# SimCopter Remake for Mac (Apple Silicon)
 
-[![Download Latest Release](https://img.shields.io/badge/Download-Latest%20Release-brightgreen?style=for-the-badge&logo=github)](https://github.com/JamesIV4/sim-copter-remake/releases/latest)
+[![Download for Mac](https://img.shields.io/badge/Download-Mac%20(Apple%20Silicon)-brightgreen?style=for-the-badge&logo=apple)](https://github.com/pedroserano/sim-copter-remake/releases/latest)
+
+> **This is an unofficial Apple Silicon (M1, M2, M3, M4 and later) port of [SimCopter Remake](https://github.com/JamesIV4/sim-copter-remake)** by JamesIV4. It runs natively on Apple Silicon Macs, without Windows, Wine, CrossOver or a virtual machine.
+>
+> It builds on the Mac port work in [wyozi/sim-copter-remake](https://github.com/wyozi/sim-copter-remake) and adds a **data-free download with a click-to-install setup**. All of the game itself is JamesIV4's work. For the Windows version, go to the [original project](https://github.com/JamesIV4/sim-copter-remake/releases/latest).
+
+## Playing on a Mac
+
+**You need your own copy of the original SimCopter (1996)**: the CD, an ISO image of it, or an installed SimCopter folder. This download contains none of the original game files.
+
+1. **Download** the latest `SimCopterRemake-…-mac-arm64.zip` from [Releases](https://github.com/pedroserano/sim-copter-remake/releases/latest) and unzip it.
+2. **Insert or mount your SimCopter CD**, or have the ISO or folder ready.
+3. **Open _Install SimCopter Data_.** It finds the CD on its own, or asks you to pick the ISO or folder. Then it copies the game files and converts the original movies while a progress bar shows how far it has got.
+4. **Open _SimCopterRemake_** and fly.
+
+You don't need Homebrew, Python, Terminal or an admin password.
+
+**First launch:** the apps aren't notarized by Apple, so macOS blocks each one the first time you open it. Double-click the app, click **Done** on the warning, then go to **System Settings → Privacy & Security** and click **Open Anyway**. You only do this once per app. The game's first start can sit on a black window for a few minutes while macOS scans it, and that also only happens once.
+
+### What this port changes
+
+- **Native Apple Silicon build.** The game is compiled for arm64 and renders with Metal. It includes wyozi's Mac fixes for compiler errors, input (dead mouse clicks, stuck modifier keys), graphics settings tuned for Mac, and Mac packaging.
+- **No original game data in the download.** The release script strips the original SimCopter files, and movies converted from them, out of the packaged app. It refuses to create the zip if any original-looking file is left inside the app.
+- **Game data lives outside the app.** On Mac the game also looks in `~/Library/Application Support/SimCopterRemake/SimCopter` for the original files and converted movies. You never have to modify the app (which would break its code signature), and your data survives updates.
+- **Click-to-install setup app.** _Install SimCopter Data_ is a normal Mac app with dialogs and a progress bar. It finds the CD automatically, accepts an ISO or folder, copies the data, and converts the intro movies, menu sky, career previews and loading animation.
+- **ffmpeg handled automatically.** Movie conversion uses ffmpeg. The installer uses one that's already installed. If there isn't one, it downloads a standalone Apple Silicon ffmpeg 9.0.2 build and checks it against the publisher's SHA-256 checksum, without Homebrew or an admin password. If that fails, the game is still installed and just skips those movies.
+- **No Python needed.** The movie conversion that used to run through the project's Python scripts is done with plain ffmpeg commands, and each converted movie's frame count is checked.
+
+To remove everything, delete `~/Library/Application Support/SimCopterRemake` and the two apps.
+
+### Building it yourself
+
+See [Docs/memory/mac-build-and-run.md](Docs/memory/mac-build-and-run.md) for building with Unreal Engine 5.8 on a Mac. [Tools/MacRelease/make_release.sh](Tools/MacRelease/make_release.sh) turns a packaged build into the data-free release zip, and [Tools/MacRelease/installer](Tools/MacRelease/installer) holds the installer.
+
+---
+
+## About SimCopter Remake
+
+_The original project's description follows._
 
 **SimCopter Remake** is a ground-up reimplementation of Maxis's 1996 PC game _SimCopter_, built in Unreal Engine 5.
 
