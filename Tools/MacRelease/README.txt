@@ -9,22 +9,34 @@ It does NOT include any of the original SimCopter (1996) game files. You need
 your own copy of the original game: the CD, an ISO image of it, or an
 installed SimCopter folder.
 
-1. Insert or mount your SimCopter CD (or have the ISO / folder ready).
+Setup
+-----
 
-2. Optional, for the intro movies and animated menus:
-       brew install ffmpeg
-   Without ffmpeg the game still runs; those movies are skipped.
+1. Insert or mount your SimCopter CD, or have the ISO or folder ready.
 
-3. Double-click "Install SimCopter Data.command".
-   If macOS refuses to open it, right-click it and choose Open.
-   It copies the game data to:
-       ~/Library/Application Support/SimCopterRemake/SimCopter
-   You can also pass the location yourself:
-       ./"Install SimCopter Data.command" /path/to/SimCopter.iso
+2. Open "Install SimCopter Data". It finds the CD by itself, or lets you
+   pick the ISO or folder, then copies the game files and converts the
+   original movies. Nothing else needs to be installed first: if needed it
+   downloads ffmpeg (the movie converter) by itself.
 
-4. Open SimCopterRemake.app. The app is not notarized, so the first time
-   macOS will block it. Either right-click it and choose Open, or run:
-       xattr -dr com.apple.quarantine SimCopterRemake.app
+3. Open SimCopterRemake.
 
-The first launch can sit on a black window for a few minutes while macOS
-scans the app. That only happens once.
+The first time you open each app
+--------------------------------
+
+These apps are not notarized by Apple, so macOS blocks them the first time:
+
+  - Double-click the app. When macOS says it can't be opened, click Done.
+  - Open System Settings > Privacy & Security, scroll down, and click
+    "Open Anyway" next to the app's name. Confirm with your password.
+
+You only need to do this once per app. The game's first launch can sit on a
+black window for a few minutes while macOS scans it; that also happens once.
+
+Where things go
+---------------
+
+  ~/Library/Application Support/SimCopterRemake/SimCopter   your game files
+  ~/Library/Application Support/SimCopterRemake/ffmpeg      downloaded ffmpeg
+
+Delete that SimCopterRemake folder to remove everything.

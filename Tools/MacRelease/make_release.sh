@@ -19,7 +19,7 @@ OUT="$REPO/SimCopterRemake/Saved/MacRelease"
 STAGE="$OUT/SimCopter Remake $VERSION"
 ZIP="$OUT/SimCopterRemake-$VERSION-mac-arm64.zip"
 rm -rf "$STAGE" "$ZIP"
-mkdir -p "$STAGE/tools"
+mkdir -p "$STAGE"
 
 ditto "$APP_SRC" "$STAGE/SimCopterRemake.app"
 UE="$STAGE/SimCopterRemake.app/Contents/UE"
@@ -38,12 +38,8 @@ fi
 # The bundle changed, so its seal must be redone. Ad hoc: the release is not notarized.
 codesign --force --deep --sign - "$STAGE/SimCopterRemake.app"
 
-cp "$REPO/Tools/MacRelease/Install SimCopter Data.command" "$STAGE/"
-chmod +x "$STAGE/Install SimCopter Data.command"
+"$REPO/Tools/MacRelease/build_installer_app.sh" "$STAGE/Install SimCopter Data.app"
 cp "$REPO/Tools/MacRelease/README.txt" "$STAGE/"
-for s in BakeIntroMovies BakeLoadingScreen BakeMenuSky BakeCareerPreviews; do
-    cp "$REPO/Tools/Unreal/$s.py" "$STAGE/tools/"
-done
 
 (cd "$OUT" && ditto -c -k --sequesterRsrc --keepParent "$(basename "$STAGE")" "$ZIP")
 echo "Release zip: $ZIP ($(du -h "$ZIP" | cut -f1))"
